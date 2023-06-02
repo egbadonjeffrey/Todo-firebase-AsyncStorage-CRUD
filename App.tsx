@@ -1,20 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import MyDrawer from "./routes/Drawer";
+import { MyContextProvider } from "./context/MyContext";
+import {
+  NavigationContextProvider,
+  useNavigationContext,
+} from "./context/NavigationRef";
+import { useEffect } from "react";
 
 export default function App() {
+  const { navigationRef } = useNavigationContext();
+
+  useEffect(() => {
+    // Save the navigation reference to the context
+    navigationRef.current = navigationRef.current;
+  }, [navigationRef]);
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContextProvider>
+      <MyContextProvider>
+        <SafeAreaProvider>
+          <NavigationContainer ref={navigationRef}>
+            <MyDrawer />
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </MyContextProvider>
+    </NavigationContextProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
